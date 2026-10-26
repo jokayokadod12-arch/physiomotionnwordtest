@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <meta name="theme-color" content="#1D3028">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Physio Motion">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Anatomy Region — Physio Motion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/function-lab.css">
+  <link rel="stylesheet" href="css/mobile.css">
+<style>
+body { display:flex; flex-direction:column; min-height:100vh; background:var(--bg); }
+
+.ar-hero {
+  position:relative; z-index:1;
+  background: linear-gradient(135deg, var(--forest-deep) 0%, var(--forest) 55%, var(--sage) 100%);
+  padding: 26px 24px 20px;
+}
+.ar-back { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:rgba(250,247,242,.75); cursor:pointer; margin-bottom:10px; }
+.ar-title { font-family:'Playfair Display', serif; font-size:clamp(20px,4vw,28px); font-weight:700; color:#FAF7F2; }
+.ar-sub { font-size:12.5px; color:rgba(250,247,242,.55); margin-top:4px; }
+
+.ar-main { flex:1; max-width:900px; margin:0 auto; width:100%; padding:20px 18px 90px; }
+
+.ar-tabs { display:flex; gap:8px; margin-bottom:20px; position:sticky; top:0; background:var(--bg); padding:10px 0; z-index:5; }
+.ar-tab { flex:1; text-align:center; padding:10px; border-radius:12px; border:1px solid var(--border); background:var(--bg-card); font-size:12.5px; font-weight:700; color:var(--text-sec); cursor:pointer; transition:.2s; }
+.ar-tab.active { background:var(--forest); color:#FAF7F2; border-color:var(--forest); }
+
+.ar-quiz-cta {
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:linear-gradient(135deg, var(--gold-pale), var(--sage-dim));
+  border:1px solid var(--border-warm); border-radius:16px; padding:16px 18px; margin-bottom:20px;
+}
+.ar-quiz-cta-txt b { font-family:'Playfair Display', serif; color:var(--forest); font-size:14.5px; display:block; margin-bottom:2px; }
+.ar-quiz-cta-txt span { font-size:11.5px; color:var(--muted); }
+.ar-quiz-btn { flex-shrink:0; padding:10px 18px; border-radius:100px; background:var(--gold); color:#fff; font-size:12.5px; font-weight:700; border:none; cursor:pointer; }
+
+.ar-group-lbl { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--sage); margin:22px 2px 10px; }
+.ar-group-lbl:first-child { margin-top:0; }
+
+.ar-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; margin-bottom:10px; overflow:hidden; box-shadow:var(--shadow-sm); }
+.ar-card-hd { display:flex; align-items:center; gap:12px; padding:14px 16px; cursor:pointer; }
+.ar-card-hd .dot { width:8px; height:8px; border-radius:50%; background:var(--sage); flex-shrink:0; }
+.ar-card-name { font-family:'Playfair Display', serif; font-size:14.5px; font-weight:700; color:var(--forest); flex:1; }
+.ar-card-tag { font-size:10px; color:var(--muted); }
+.ar-card-chev { font-size:11px; color:var(--muted); transition:transform .2s; }
+.ar-card.open .ar-card-chev { transform:rotate(180deg); }
+
+.ar-card-body { display:none; padding:0 16px 18px; }
+.ar-card.open .ar-card-body { display:block; }
+
+.ar-detail-row { margin-bottom:8px; }
+.ar-detail-lbl { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--gold); margin-bottom:2px; }
+.ar-detail-val { font-size:12.5px; color:var(--text-sec); line-height:1.6; }
+.ar-landmarks { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+.ar-landmark-chip { font-size:11px; padding:4px 10px; border-radius:100px; background:var(--sage-dim); color:var(--sage); font-weight:600; }
+
+/* Videos tab */
+.ar-video-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; margin-bottom:12px; overflow:hidden; box-shadow:var(--shadow-sm); }
+.ar-video-thumb { position:relative; width:100%; aspect-ratio:16/9; background:#000 center/cover no-repeat; cursor:pointer; }
+.ar-video-thumb .ar-play-btn {
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+}
+.ar-video-thumb .ar-play-btn span {
+  width:56px; height:56px; border-radius:50%; background:rgba(29,48,40,.75); backdrop-filter:blur(2px);
+  display:flex; align-items:center; justify-content:center; font-size:20px; color:#FAF7F2;
+  border:1px solid rgba(250,247,242,.4); transition:transform .2s;
+}
+.ar-video-thumb:hover .ar-play-btn span { transform:scale(1.08); }
+.ar-video-info { padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.ar-video-title { font-family:'Playfair Display', serif; font-size:14px; font-weight:700; color:var(--forest); }
+.ar-yt-link { flex-shrink:0; font-size:11.5px; font-weight:700; color:var(--gold); white-space:nowrap; display:inline-flex; align-items:center; gap:4px; text-decoration:none; }
+.ar-video-empty { text-align:center; padding:40px 20px; color:var(--muted); font-size:13px; }
+
+/* Video modal */
+.ar-modal-backdrop { display:none; position:fixed; inset:0; background:rgba(20,24,20,.85); z-index:50; align-items:center; justify-content:center; padding:16px; }
+.ar-modal-backdrop.open { display:flex; }
+.ar-modal-box { width:100%; max-width:820px; background:#000; border-radius:16px; overflow:hidden; position:relative; box-shadow:0 20px 60px rgba(0,0,0,.5); }
+.ar-modal-frame-wrap { position:relative; width:100%; aspect-ratio:16/9; background:#000; }
+.ar-modal-frame-wrap iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+.ar-modal-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; background:#111; }
+.ar-modal-title { font-size:12.5px; font-weight:700; color:#FAF7F2; }
+.ar-modal-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.ar-modal-yt { font-size:11.5px; font-weight:700; color:var(--gold-light); text-decoration:none; white-space:nowrap; }
+.ar-modal-close { background:none; border:none; color:#FAF7F2; font-size:20px; cursor:pointer; line-height:1; padding:2px 4px; }
+</style>
+</head>
+<body class="fl-app">
+<div class="fl-sig">WE ARE PEOPLE DEALING WITH <b>FUNCTION</b></div>
+
+<div class="ar-hero">
+  <div class="ar-back" onclick="window.location.href='anatomy.html'">← Back to Anatomy</div>
+  <div class="ar-title" id="rTitle">Region</div>
+  <div class="ar-sub" id="rSub"></div>
+</div>
+
+<main class="ar-main">
+  <div class="ar-tabs">
+    <div class="ar-tab active" data-t="bones" onclick="switchTab('bones')">🦴 Bones</div>
+    <div class="ar-tab" data-t="joints" onclick="switchTab('joints')">🔗 Joints</div>
+    <div class="ar-tab" data-t="muscles" onclick="switchTab('muscles')">💪 Muscles</div>
+    <div class="ar-tab" data-t="videos" onclick="switchTab('videos')">🎥 Videos</div>
+  </div>
+
+  <div class="ar-quiz-cta">
+    <div class="ar-quiz-cta-txt"><b>Ready to test yourself?</b><span id="quizCountLbl">MCQ quiz on this region</span></div>
+    <button class="ar-quiz-btn" onclick="startQuiz()">Start Quiz →</button>
+  </div>
+
+  <div id="content"></div>
+</main>
+
+<div class="ar-modal-backdrop" id="videoModal" onclick="if(event.target===this) closeVideo()">
+  <div class="ar-modal-box">
+    <div class="ar-modal-frame-wrap" id="videoFrameWrap"></div>
+    <div class="ar-modal-bar">
+      <span class="ar-modal-title" id="videoModalTitle"></span>
+      <div class="ar-modal-actions">
+        <a class="ar-modal-yt" id="videoModalYtLink" href="#" target="_blank" rel="noopener">Open on YouTube ↗</a>
+        <button class="ar-modal-close" onclick="closeVideo()">✕</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/anatomy-data.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const regionId = params.get('r') || 'upper-limb';
+const region = ANATOMY_REGIONS.find(r => r.id === regionId) || ANATOMY_REGIONS[0];
+let currentTab = 'bones';
+
+document.getElementById('rTitle').textContent = region.label;
+document.getElementById('rSub').textContent = region.sub;
+(function setQuizLabel() {
+  const q = ANATOMY_QUIZZES[regionId];
+  const lbl = document.getElementById('quizCountLbl');
+  lbl.textContent = q ? (q.questions.length + '-question MCQ quiz on this region') : 'Quiz coming soon for this region';
+})();
+
+function landmarksHTML(list) {
+  if (!list || !list.length) return '';
+  return `<div class="ar-detail-row"><div class="ar-detail-lbl">Key Landmarks</div><div class="ar-landmarks">${list.map(l=>`<span class="ar-landmark-chip">${l}</span>`).join('')}</div></div>`;
+}
+
+function boneCard(b) {
+  return `<div class="ar-card" id="c-${b.id}">
+    <div class="ar-card-hd" onclick="toggleCard('${b.id}')">
+      <span class="dot"></span>
+      <span class="ar-card-name">${b.name}</span>
+      <span class="ar-card-tag">${b.group}</span>
+      <span class="ar-card-chev">▾</span>
+    </div>
+    <div class="ar-card-body">
+      <div class="ar-detail-row"><div class="ar-detail-val">${b.summary}</div></div>
+      <div class="ar-detail-row"><div class="ar-detail-val">${b.details}</div></div>
+      ${landmarksHTML(b.landmarks)}
+    </div>
+  </div>`;
+}
+
+function jointCard(j) {
+  return `<div class="ar-card" id="c-${j.id}">
+    <div class="ar-card-hd" onclick="toggleCard('${j.id}')">
+      <span class="dot"></span>
+      <span class="ar-card-name">${j.name}</span>
+      <span class="ar-card-tag">${j.type}</span>
+      <span class="ar-card-chev">▾</span>
+    </div>
+    <div class="ar-card-body">
+      <div class="ar-detail-row"><div class="ar-detail-val">${j.summary}</div></div>
+      ${j.extra ? `<div class="ar-detail-row"><div class="ar-detail-lbl">Good to Know</div><div class="ar-detail-val">${j.extra}</div></div>` : ''}
+    </div>
+  </div>`;
+}
+
+function muscleCard(m) {
+  return `<div class="ar-card" id="c-${m.id}">
+    <div class="ar-card-hd" onclick="toggleCard('${m.id}')">
+      <span class="dot"></span>
+      <span class="ar-card-name">${m.name}</span>
+      <span class="ar-card-chev">▾</span>
+    </div>
+    <div class="ar-card-body">
+      <div class="ar-detail-row"><div class="ar-detail-lbl">Origin</div><div class="ar-detail-val">${m.origin}</div></div>
+      <div class="ar-detail-row"><div class="ar-detail-lbl">Insertion</div><div class="ar-detail-val">${m.insertion}</div></div>
+      <div class="ar-detail-row"><div class="ar-detail-lbl">Action</div><div class="ar-detail-val">${m.action}</div></div>
+      <div class="ar-detail-row"><div class="ar-detail-lbl">Nerve Supply</div><div class="ar-detail-val">${m.nerve || '—'}</div></div>
+      ${m.note ? `<div class="ar-detail-row"><div class="ar-detail-lbl">Clinical Note</div><div class="ar-detail-val">${m.note}</div></div>` : ''}
+    </div>
+  </div>`;
+}
+
+function toggleCard(id) {
+  document.getElementById('c-' + id).classList.toggle('open');
+}
+
+function videoCard(v) {
+  const thumb = `https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg`;
+  return `<div class="ar-video-card">
+    <div class="ar-video-thumb" style="background-image:url('${thumb}')" onclick="openVideo('${v.youtubeId}','${v.title.replace(/'/g,"\\'")}')">
+      <div class="ar-play-btn"><span>▶</span></div>
+    </div>
+    <div class="ar-video-info">
+      <span class="ar-video-title">${v.title}</span>
+      <a class="ar-yt-link" href="https://www.youtube.com/watch?v=${v.youtubeId}" target="_blank" rel="noopener" onclick="event.stopPropagation()">YouTube ↗</a>
+    </div>
+  </div>`;
+}
+
+function openVideo(youtubeId, title) {
+  document.getElementById('videoFrameWrap').innerHTML =
+    `<iframe src="https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&rel=0" title="${title}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+  document.getElementById('videoModalTitle').textContent = title;
+  document.getElementById('videoModalYtLink').href = `https://www.youtube.com/watch?v=${youtubeId}`;
+  document.getElementById('videoModal').classList.add('open');
+}
+
+function closeVideo() {
+  document.getElementById('videoModal').classList.remove('open');
+  document.getElementById('videoFrameWrap').innerHTML = ''; // stop playback
+}
+
+function switchTab(t) {
+  currentTab = t;
+  document.querySelectorAll('.ar-tab').forEach(el => el.classList.toggle('active', el.dataset.t === t));
+  renderContent();
+}
+
+function renderContent() {
+  const el = document.getElementById('content');
+  document.querySelector('.ar-quiz-cta').style.display = (currentTab === 'videos') ? 'none' : 'flex';
+  if (currentTab === 'bones') {
+    el.innerHTML = (ANATOMY_BONES[regionId] || []).map(boneCard).join('');
+  } else if (currentTab === 'joints') {
+    el.innerHTML = (ANATOMY_JOINTS[regionId] || []).map(jointCard).join('');
+  } else if (currentTab === 'videos') {
+    const vids = ANATOMY_VIDEOS[regionId] || [];
+    el.innerHTML = vids.length
+      ? vids.map(videoCard).join('')
+      : `<div class="ar-video-empty">No videos added for this region yet.</div>`;
+  } else {
+    const groups = ANATOMY_MUSCLE_GROUPS[regionId] || [];
+    el.innerHTML = groups.map(g => `<div class="ar-group-lbl">${g.group}</div>${g.muscles.map(muscleCard).join('')}`).join('');
+  }
+}
+
+function startQuiz() {
+  window.location.href = 'anatomy-quiz.html?r=' + regionId;
+}
+
+renderContent();
+</script>
+</body>
+</html>

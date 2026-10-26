@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="icons/icon-144.png">
+  <meta name="theme-color" content="#152A1D">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Physio Motion">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sign In — Physio Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+* { -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --cream: #FAF7F2; --cream-warm: #F5EFE4; --cream-deep: #EDE3D4;
+  --sage: #5A7A62; --sage-light: #84AA8C; --sage-pale: #C8DAC9;
+  --sage-dim: rgba(90,122,98,.1);
+  --forest: #2D4A35; --forest-deep: #152A1D; --forest-mid:#3C6249;
+  --gold: #B8943F; --gold-light: #D9B36A; --gold-pale: rgba(184,148,63,.12);
+  --charcoal: #17241B; --charcoal-mid: #3E4A41;
+  --muted: #7C877E; --muted-light: #AAB2A8;
+  --border: rgba(45,74,53,.16); --border-strong: rgba(45,74,53,.32);
+  --danger: #C84A4A; --success: #3D8B5B;
+}
+
+html { height: 100%; background: var(--cream); }
+body {
+  min-height: 100%; min-height: 100dvh;
+  background: var(--cream);
+  font-family: 'Inter', sans-serif;
+  color: var(--charcoal);
+  overflow-x: hidden;
+  display: flex; flex-direction:column; align-items: center; justify-content: center;
+  padding: env(safe-area-inset-top,12px) 20px env(safe-area-inset-bottom,20px);
+}
+
+/* blueprint bg */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 52px 52px;
+  opacity:.4;
+  mask-image: radial-gradient(ellipse 75% 60% at 50% 20%, #000 0%, transparent 72%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 60% at 50% 20%, #000 0%, transparent 72%);
+}
+
+.fl-sig {
+  position:relative; z-index:2; width:100%; text-align:center;
+  font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px;
+  color: var(--sage); text-transform:uppercase; margin-bottom:22px; font-weight:500;
+}
+.fl-sig b { color: var(--gold); font-weight:600; }
+
+/* ══ SHELL ══ */
+.login-shell {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 940px;
+  border-radius: 22px; overflow: hidden;
+  display: grid; grid-template-columns: 1fr 1fr;
+  box-shadow: 0 32px 90px rgba(21,42,29,.16), 0 4px 20px rgba(21,42,29,.06);
+  border: 1px solid var(--border-strong);
+  min-height: 580px;
+}
+@media (max-width: 680px) {
+  .login-shell { grid-template-columns: 1fr; max-width: 420px; border-radius: 18px; min-height: auto; }
+}
+
+/* ══ LEFT PANEL — console ══ */
+.l-left {
+  background: linear-gradient(155deg, var(--forest-deep) 0%, var(--forest) 60%, var(--forest-mid) 100%);
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 44px 40px; position: relative; overflow: hidden;
+}
+.l-left::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(250,247,242,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(250,247,242,.06) 1px, transparent 1px);
+  background-size: 38px 38px;
+  mask-image: radial-gradient(ellipse 70% 80% at 30% 20%, #000 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 80% at 30% 20%, #000 0%, transparent 70%);
+}
+.l-left::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--sage-pale), var(--gold-light), var(--sage-pale), transparent);
+}
+.lp-top { position: relative; z-index: 1; display:flex; align-items:center; gap:12px; }
+.lp-mark {
+  width: 46px; height: 46px; border-radius: 13px; overflow:hidden;
+  border: 1px solid rgba(250,247,242,.22); flex-shrink:0;
+  box-shadow: 0 8px 24px rgba(0,0,0,.25);
+}
+.lp-mark img { width:100%; height:100%; object-fit:cover; display:block; }
+.lp-brand { line-height:1.15; }
+.lp-brand .n1 { font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700; color:#FAF7F2; letter-spacing:-.2px; }
+.lp-brand .n2 { display:block; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1.5px; color:var(--sage-pale); margin-top:2px; }
+
+.lp-mid { position: relative; z-index: 1; margin: 34px 0; }
+.lp-kicker {
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:500;
+  letter-spacing:1.8px; text-transform:uppercase; color: var(--sage-pale); margin-bottom:16px;
+}
+.lp-kicker::before { content:''; width:6px; height:6px; background: var(--gold-light); transform: rotate(45deg); flex-shrink:0; }
+.lp-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 32px; font-weight: 700; color: #FAF7F2; letter-spacing: -1px; line-height: 1.14;
+}
+.lp-sub { font-size: 13.5px; color: rgba(250,247,242,.5); line-height: 1.7; max-width: 300px; margin-top:14px; }
+
+.lp-readout {
+  position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:28px;
+}
+.lp-ro { padding:12px 14px; background:rgba(250,247,242,.06); border:1px solid rgba(250,247,242,.14); border-radius:10px; }
+.lp-ro-v { font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:600; color:#FAF7F2; display:block; }
+.lp-ro-l { font-size:9.5px; color:rgba(250,247,242,.4); text-transform:uppercase; letter-spacing:.6px; margin-top:2px; display:block; }
+
+.lp-features { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 8px; }
+.lp-feat {
+  display: flex; align-items: center; gap: 11px;
+  padding: 10px 13px; background: rgba(250,247,242,.05);
+  border: 1px solid rgba(250,247,242,.1); border-radius: 10px;
+  font-size: 12.5px; color: rgba(250,247,242,.7);
+}
+.lp-feat span { font-size: 15px; }
+
+@media (max-width: 680px) { .l-left { display: none; } }
+
+/* ══ RIGHT PANEL ══ */
+.l-right {
+  background: white;
+  padding: 48px 44px;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; overflow: hidden;
+}
+@media (max-width: 480px) { .l-right { padding: 34px 22px; } }
+
+.r-back {
+  display:inline-flex; align-items:center; gap:6px; padding:6px 13px; border-radius:8px;
+  background: var(--sage-dim); border:1px solid var(--border);
+  color: var(--forest); font-size:11px; font-weight:700; text-decoration:none;
+  letter-spacing:.5px; margin-bottom:20px; align-self:flex-start;
+  font-family:'JetBrains Mono',monospace;
+}
+.r-welcome {
+  font-family:'JetBrains Mono',monospace;
+  font-size: 10.5px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--sage); margin-bottom: 8px;
+}
+.r-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 27px; font-weight: 700; color: var(--forest-deep); letter-spacing: -.6px; margin-bottom: 6px;
+}
+.r-sub { font-size: 13.5px; color: var(--muted); line-height: 1.5; margin-bottom: 26px; }
+
+/* TABS */
+.auth-tabs {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  border-bottom: 1.5px solid var(--border);
+  margin-bottom: 26px;
+}
+.auth-tab {
+  padding: 10px 4px; font-family:'Inter', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; border: none; background: transparent;
+  color: var(--muted); transition: all .2s; border-bottom:2px solid transparent; margin-bottom:-1.5px;
+  letter-spacing:.2px;
+}
+.auth-tab.active { color: var(--forest-deep); border-bottom-color: var(--gold); }
+
+/* SLIDE WRAPPER */
+.slide-wrap { position: relative; overflow: hidden; }
+.auth-slide {
+  transition: transform .35s cubic-bezier(.4,0,.2,1), opacity .35s ease;
+}
+.auth-slide.slide-login  { transform: translateX(0); opacity: 1; }
+.auth-slide.slide-signup { transform: translateX(0); opacity: 1; }
+
+@media (min-width: 681px) {
+  #loginWrapper.show-signup .slide-login  { transform: translateX(-105%); opacity: 0; pointer-events: none; position: absolute; top: 0; left: 0; right: 0; }
+  #loginWrapper.show-signup .slide-signup { transform: translateX(0); opacity: 1; }
+  #loginWrapper:not(.show-signup) .slide-signup { transform: translateX(105%); opacity: 0; pointer-events: none; position: absolute; top: 0; left: 0; right: 0; }
+}
+
+@media (max-width: 680px) {
+  .slide-login.hidden-mobile,
+  .slide-signup.hidden-mobile { display: none; }
+}
+
+/* FORM FIELDS */
+.field-group { margin-bottom: 17px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+
+.field-label {
+  font-family:'JetBrains Mono',monospace;
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--charcoal-mid);
+  display: block; margin-bottom: 7px;
+}
+.input-wrap { position: relative; }
+.input-ico {
+  position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+  font-size: 14px; pointer-events: none; z-index: 1;
+}
+.field-input {
+  width: 100%; padding: 12px 16px 12px 40px;
+  background: var(--cream-warm); border: 1.5px solid var(--border);
+  border-radius: 10px; color: var(--charcoal);
+  font-family: 'Inter', sans-serif; font-size: 14px;
+  outline: none; transition: all .2s;
+}
+.field-input:focus {
+  border-color: var(--sage); background: white;
+  box-shadow: 0 0 0 3px rgba(90,122,98,.12);
+}
+.field-input.no-ico { padding-left: 15px; }
+.pw-eye {
+  position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
+  font-size: 14px; cursor: pointer; border: none; background: none;
+  color: var(--muted); padding: 0; z-index: 1; line-height: 1;
+}
+
+/* ROLE SELECT */
+.role-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 9px; margin-bottom: 17px; }
+@media(max-width:420px) { .role-grid { grid-template-columns: 1fr; } }
+.role-opt {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  padding: 13px 8px; border-radius: 12px;
+  background: var(--cream-warm); border: 1.5px solid var(--border);
+  cursor: pointer; transition: all .2s; position: relative;
+  text-align: center;
+}
+.role-opt:hover { border-color: var(--sage-pale); }
+.role-opt.selected {
+  background: var(--sage-dim); border-color: var(--sage);
+  box-shadow: 0 0 0 3px rgba(90,122,98,.1);
+}
+.role-code {
+  position:absolute; top:7px; right:8px;
+  font-family:'JetBrains Mono',monospace; font-size:8.5px; color: var(--muted-light); letter-spacing:.5px;
+}
+.role-opt.selected .role-code { color: var(--sage); }
+.role-ico { font-size: 23px; }
+.role-name { font-size: 12.5px; font-weight: 700; color: var(--forest-deep); }
+.role-desc { font-size: 9.5px; color: var(--muted); line-height: 1.4; }
+.role-opt.selected .role-name { color: var(--sage); }
+
+/* MESSAGE */
+.msg-txt {
+  font-size: 12.5px; min-height: 18px; margin-top: 6px; margin-bottom: 4px;
+  color: var(--danger); font-weight: 500;
+}
+.msg-txt.ok { color: var(--success); }
+
+/* SUBMIT */
+.submit-btn {
+  width: 100%; padding: 15px; margin-top: 8px;
+  border-radius: 11px; font-family: 'Inter', sans-serif;
+  font-size: 14.5px; font-weight: 700; cursor: pointer; border: none;
+  background: var(--forest-deep);
+  color: white; box-shadow: 0 6px 20px rgba(21,42,29,.28);
+  transition: all .22s cubic-bezier(.34,1.4,.64,1);
+  margin-bottom: 16px; letter-spacing:.2px;
+}
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(21,42,29,.36); background: var(--forest); }
+.submit-btn:active { transform: translateY(0); }
+.submit-btn:disabled { opacity: .55; cursor: not-allowed; transform: none !important; }
+
+/* TOGGLE TEXT */
+.toggle-txt { text-align: center; font-size: 12.5px; color: var(--muted); }
+.toggle-link { color: var(--sage); font-weight: 700; cursor: pointer; text-decoration: none; }
+.toggle-link:hover { color: var(--forest); }
+</style>
+<link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+
+<div class="fl-sig">WE ARE PEOPLE DEALING WITH <b>FUNCTION</b></div>
+
+<div class="login-shell">
+
+  <!-- LEFT PANEL -->
+  <div class="l-left">
+    <div class="lp-top">
+      <div class="lp-mark"><img src="icons/logo.png" alt="Physio Motion"></div>
+      <div class="lp-brand">
+        <span class="n1">Physio Motion</span>
+        <span class="n2">FUNCTION-FIRST PLATFORM</span>
+      </div>
+    </div>
+
+    <div class="lp-mid">
+      <div class="lp-kicker">Secure access node</div>
+      <div class="lp-title">Sign in to<br>measure function.</div>
+      <div class="lp-sub">The platform connecting physiotherapists with the patients they treat — and the students learning to treat them.</div>
+    </div>
+
+    <div class="lp-readout">
+      <div class="lp-ro"><span class="lp-ro-v">373</span><span class="lp-ro-l">Exercises</span></div>
+      <div class="lp-ro"><span class="lp-ro-v">17 pts</span><span class="lp-ro-l">Tracked live</span></div>
+    </div>
+
+    <div class="lp-features">
+      <div class="lp-feat"><span>🤖</span> AI real-time pose analysis</div>
+      <div class="lp-feat"><span>☁️</span> Full cloud sync</div>
+      <div class="lp-feat"><span>📱</span> Mobile &amp; desktop</div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL — contains loginWrapper with original IDs -->
+  <div class="l-right">
+    <a href="index.html" class="r-back">← BACK</a>
+    <div class="r-welcome">Welcome back</div>
+    <h2 class="r-title" id="r-form-title">Sign In</h2>
+    <p class="r-sub" id="r-form-sub">Enter your credentials to continue.</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchToLogin()">Sign In</button>
+      <button class="auth-tab" id="tabSignup" onclick="switchToSignup()">Create Account</button>
+    </div>
+
+    <!-- ══ loginWrapper with EXACT original IDs ══ -->
+    <div id="loginWrapper">
+
+      <!-- LOGIN PANE -->
+      <div class="auth-slide slide-login" id="loginPane">
+        <div class="field-group">
+          <label class="field-label">Email Address</label>
+          <div class="input-wrap">
+            <span class="input-ico">✉️</span>
+            <input type="email" id="loginEmail" name="email"
+                   class="field-input" placeholder="you@example.com"
+                   autocomplete="email">
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Password</label>
+          <div class="input-wrap">
+            <span class="input-ico">🔒</span>
+            <input type="password" id="loginPass" name="password"
+                   class="field-input" placeholder="Your password"
+                   autocomplete="current-password">
+            <button type="button" class="pw-eye" onclick="toggleEye('loginPass',this)">👁️</button>
+          </div>
+        </div>
+        <p class="msg-txt" id="loginMsg"></p>
+        <button class="submit-btn" id="loginBtn">Sign In →</button>
+        <div class="toggle-txt">
+          No account? <a class="toggle-link" onclick="switchToSignup()">Create one free</a>
+        </div>
+      </div>
+
+      <!-- SIGNUP PANE -->
+      <div class="auth-slide slide-signup hidden-mobile" id="signupPane">
+
+        <!-- Role selector (visual, drives the hidden select) -->
+        <div class="field-group">
+          <label class="field-label">I am a</label>
+          <div class="role-grid">
+            <label class="role-opt selected" id="ropt-patient" onclick="pickRole('patient')">
+              <span class="role-code">P</span>
+              <span class="role-ico">🧑‍🦽</span>
+              <span class="role-name">Patient</span>
+              <span class="role-desc">Seeking physiotherapy care</span>
+            </label>
+            <label class="role-opt" id="ropt-doctor" onclick="pickRole('doctor')">
+              <span class="role-code">D</span>
+              <span class="role-ico">👨‍⚕️</span>
+              <span class="role-name">Doctor</span>
+              <span class="role-desc">Physiotherapy professional</span>
+            </label>
+            <label class="role-opt" id="ropt-student" onclick="pickRole('student')">
+              <span class="role-code">S</span>
+              <span class="role-ico">🎓</span>
+              <span class="role-name">College Student</span>
+              <span class="role-desc">Physiotherapy student</span>
+            </label>
+          </div>
+          <!-- ORIGINAL ID — login.js reads this -->
+          <select id="signupRole" name="role" style="display:none;">
+            <option value="patient">Patient</option>
+            <option value="doctor">Doctor</option>
+            <option value="student">College Student</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Full Name</label>
+          <input type="text" id="signupName" name="name"
+                 class="field-input no-ico" placeholder="Your full name"
+                 autocomplete="name">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Email Address</label>
+          <div class="input-wrap">
+            <span class="input-ico">✉️</span>
+            <input type="email" id="signupEmail" name="email"
+                   class="field-input" placeholder="you@example.com"
+                   autocomplete="email">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group" style="margin:0;">
+            <label class="field-label">Password</label>
+            <div class="input-wrap">
+              <input type="password" id="signupPass" name="new-password"
+                     class="field-input no-ico" placeholder="Min 6 characters"
+                     autocomplete="new-password">
+              <button type="button" class="pw-eye" onclick="toggleEye('signupPass',this)">👁️</button>
+            </div>
+          </div>
+          <div class="field-group" style="margin:0;">
+            <label class="field-label">Confirm</label>
+            <div class="input-wrap">
+              <input type="password" id="signupPass2"
+                     class="field-input no-ico" placeholder="Repeat password">
+            </div>
+          </div>
+        </div>
+
+        <p class="msg-txt" id="signupMsg"></p>
+        <button class="submit-btn" id="signupBtn">Create Account →</button>
+        <div class="toggle-txt">
+          Already have an account? <a class="toggle-link" onclick="switchToLogin()">Sign in</a>
+        </div>
+      </div>
+
+    </div><!-- end loginWrapper -->
+  </div>
+
+</div><!-- end login-shell -->
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script>
+try {
+  if (!firebase.apps.length) firebase.initializeApp({
+    apiKey:"AIzaSyCzK4OGhLBgmIKktawOm44zd9KyhHlaITE",
+    authDomain:"physiowork-8976f.firebaseapp.com",
+    projectId:"physiowork-8976f",
+    storageBucket:"physiowork-8976f.firebasestorage.app",
+    messagingSenderId:"789519816056",
+    appId:"1:789519816056:web:c2c8d82c83f8149fd1a48d"
+  });
+  window._fbDb = firebase.firestore();
+  window._fbStorage = firebase.storage();
+  window.FIREBASE_ENABLED = true;
+} catch(e) { window.FIREBASE_ENABLED = false; }
+</script>
+<script src="js/utils.js"></script>
+<script src="js/db.js"></script>
+<script src="js/pwa.js"></script>
+<!-- Original login.js — unchanged, same functions, same IDs -->
+<script src="js/login.js"></script>
+<script>
+// ── Tab switching (new UI) wires to original login.js IDs ──
+function switchToLogin() {
+  const isMobile = window.innerWidth <= 680;
+  if (isMobile) {
+    document.getElementById('signupPane').classList.add('hidden-mobile');
+    document.getElementById('loginPane').classList.remove('hidden-mobile');
+  } else {
+    document.getElementById('loginWrapper').classList.remove('show-signup');
+  }
+  document.getElementById('tabLogin').classList.add('active');
+  document.getElementById('tabSignup').classList.remove('active');
+  document.getElementById('r-form-title').textContent = 'Sign In';
+  document.getElementById('r-form-sub').textContent = 'Enter your credentials to continue.';
+  clearMsgs();
+}
+
+function switchToSignup() {
+  const isMobile = window.innerWidth <= 680;
+  if (isMobile) {
+    document.getElementById('loginPane').classList.add('hidden-mobile');
+    document.getElementById('signupPane').classList.remove('hidden-mobile');
+  } else {
+    document.getElementById('loginWrapper').classList.add('show-signup');
+  }
+  document.getElementById('tabSignup').classList.add('active');
+  document.getElementById('tabLogin').classList.remove('active');
+  document.getElementById('r-form-title').textContent = 'Create Account';
+  document.getElementById('r-form-sub').textContent = 'Join the Physio Motion platform today.';
+  clearMsgs();
+}
+
+// ── Visual role picker (syncs to hidden #signupRole select) ──
+function pickRole(role) {
+  document.getElementById('signupRole').value = role;
+  document.getElementById('ropt-patient').classList.toggle('selected', role === 'patient');
+  document.getElementById('ropt-doctor').classList.toggle('selected', role === 'doctor');
+  document.getElementById('ropt-student').classList.toggle('selected', role === 'student');
+}
+
+// ── Password eye toggle ──
+function toggleEye(id, btn) {
+  const inp = document.getElementById(id);
+  const show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  btn.textContent = show ? '🙈' : '👁️';
+}
+
+// ── Confirm password validation before original doSignup runs ──
+// We wrap the original signupBtn click to check pass match first
+document.addEventListener('DOMContentLoaded', function() {
+  // Wire buttons to original login.js functions
+  const loginBtn  = document.getElementById('loginBtn');
+  const signupBtn = document.getElementById('signupBtn');
+  const loginPass = document.getElementById('loginPass');
+
+  if (loginBtn)  loginBtn.addEventListener('click', doLogin);
+  if (loginPass) loginPass.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doLogin();
+  });
+  if (signupBtn) signupBtn.addEventListener('click', function() {
+    const p1 = document.getElementById('signupPass').value;
+    const p2 = document.getElementById('signupPass2').value;
+    if (p2 && p1 !== p2) {
+      const el = document.getElementById('signupMsg');
+      if (el) el.textContent = 'Passwords do not match.';
+      return;
+    }
+    doSignup();
+  });
+
+  // Check if already logged in
+  try {
+    const u = JSON.parse(localStorage.getItem('currentUser'));
+    if (u && u.email) {
+      window.location.href = u.role === 'doctor' ? 'choose-year.html' : (u.role === 'student' ? 'student-dashboard.html' : 'choose-role.html');
+    }
+  } catch(e) {}
+});
+</script>
+</body>
+</html>

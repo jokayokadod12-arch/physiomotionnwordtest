@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="icons/icon-144.png">
+  <meta name="theme-color" content="#152A1D">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Physio Motion">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Doctor Dashboard — Physio Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/function-lab.css">
+<link rel="stylesheet" href="css/mobile.css">
+<style>
+body { display:flex; flex-direction:column; min-height:100vh; }
+
+/* ── DOCTOR CONSOLE ── */
+.doc-hero { position:relative; z-index:1; overflow:hidden; }
+.dh-top { padding:34px 24px 30px; position:relative; }
+.dh-inner {
+  max-width:1080px; margin:0 auto; position:relative; z-index:1;
+  display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:22px;
+}
+.dh-profile { display:flex; align-items:center; gap:16px; }
+.dh-av {
+  width:58px; height:58px; border-radius:15px;
+  background:rgba(250,247,242,.1); border:1.5px solid rgba(250,247,242,.2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:26px; flex-shrink:0;
+}
+.dh-info h2 { font-size:clamp(18px, 2.5vw, 25px); font-weight:700; color:#FAF7F2; letter-spacing:-.4px; margin-bottom:4px; }
+.dh-info p { font-size:12px; color:rgba(250,247,242,.5); }
+.dh-badge {
+  display:inline-flex; align-items:center; gap:6px; margin-top:9px;
+  padding:4px 11px; border-radius:6px;
+  background:rgba(184,148,63,.15); border:1px solid rgba(184,148,63,.32);
+  font-size:10px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase;
+  color:var(--gold-light);
+}
+.dh-stats { display:flex; gap:12px; flex-wrap:wrap; }
+.dhs { text-align:center; padding:13px 17px; min-width:76px; }
+.dhs-n { font-size:19px; display:block; }
+.dhs-l { font-size:9.5px; font-weight:600; text-transform:uppercase; letter-spacing:1px; display:block; margin-top:3px; }
+
+/* ── SPEC STRIP ── */
+.qs-strip { background:white; border-bottom:1px solid var(--border); padding:18px 24px; position:relative; z-index:1; }
+.qs-inner { max-width:1080px; margin:0 auto; display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
+@media(max-width:600px) { .qs-inner { gap:9px; } }
+.qsc { border-radius:12px; padding:15px; text-align:center; }
+.qsc-n { font-size:22px; display:block; }
+.qsc-l { font-size:9.5px; font-weight:600; text-transform:uppercase; letter-spacing:1.1px; display:block; margin-top:4px; }
+
+/* ── MAIN ── */
+.doc-main { flex:1; max-width:1080px; margin:0 auto; width:100%; padding:32px 24px 80px; position:relative; z-index:1; }
+.sec-lbl {
+  font-size:10.5px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--sage); margin-bottom:16px; display:flex; align-items:center; gap:10px;
+}
+.sec-lbl::after { content:''; flex:1; height:1px; background:linear-gradient(90deg, var(--border), transparent); }
+
+/* ── MODULE TILES ── */
+.modules-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:14px; margin-bottom:28px; }
+@media(max-width:900px) { .modules-grid { grid-template-columns:repeat(3, 1fr); } }
+@media(max-width:700px) { .modules-grid { grid-template-columns:1fr 1fr; } }
+@media(max-width:380px) { .modules-grid { grid-template-columns:1fr 1fr; gap:10px; } }
+
+.module-card {
+  background:white; border-radius:16px;
+  padding:28px 16px 18px; cursor:pointer;
+  transition:all .26s cubic-bezier(.22,1,.36,1);
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column; align-items:center; text-align:center; gap:9px;
+}
+.module-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background:var(--mc, var(--sage)); opacity:0; transition:.26s;
+}
+.module-card:hover::before { opacity:1; }
+.module-card:hover { transform:translateY(-5px); }
+.mc-icon { width:52px; height:52px; display:flex; align-items:center; justify-content:center; font-size:24px; transition:all .26s; position:relative; z-index:1; }
+.module-card:hover .mc-icon { transform:scale(1.1); }
+.mc-title { font-size:13px; font-weight:700; position:relative; z-index:1; }
+.mc-desc { font-size:10.5px; line-height:1.5; position:relative; z-index:1; }
+.mc-arr { font-size:13px; color:rgba(90,122,98,.25); transition:.26s; position:relative; z-index:1; }
+.module-card:hover .mc-arr { color:var(--mc, var(--sage)); transform:translateX(3px); }
+
+/* ── SESSION LOG ── */
+.schedule-card { padding:22px 26px; }
+.sch-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.sch-title { font-size:15px; font-weight:700; }
+.sch-empty { text-align:center; padding:26px 20px; color:var(--muted); font-size:13px; }
+.sch-empty-ico { font-size:30px; margin-bottom:9px; }
+.sch-empty-sub { font-size:11.5px; color:var(--muted-light); margin-top:5px; }
+.sch-item { display:flex; align-items:center; gap:14px; padding:11px 0; border-bottom:1px solid var(--border); }
+.sch-item:last-child { border-bottom:none; }
+.sch-time { font-size:12px; font-weight:500; color:var(--sage); min-width:58px; }
+.sch-name { font-size:13.5px; font-weight:600; color:var(--charcoal); }
+.sch-type { font-size:11.5px; color:var(--muted); margin-top:1px; }
+
+@media(max-width:420px) {
+  .module-card { padding:18px 10px 13px; border-radius:14px; gap:6px; }
+  .mc-icon { width:44px; height:44px; font-size:20px; }
+  .mc-title { font-size:11px; }
+  .mc-desc { display:none; }
+  .doc-main { padding:20px 14px 70px; }
+  .dh-top { padding:26px 16px 24px; }
+}
+</style>
+</head>
+<body class="fl-app">
+
+<div class="fl-sig">WE ARE PEOPLE DEALING WITH <b>FUNCTION</b></div>
+
+<header class="site-header">
+  <div class="logo"><img class="logo-img" src="icons/logo.png" alt="Physio Motion" onerror="this.style.display='none'"> Physio Motion Analyzer</div>
+  <div class="header-actions">
+    <button class="btn btn-header" onclick="window.location.href='chat.html'" style="position:relative;">
+      💬 Chat
+      <span id="chatBadge" style="display:none;position:absolute;top:-4px;right:-4px;background:#C84A4A;color:#fff;border-radius:8px;font-size:9px;font-weight:700;padding:1px 5px;"></span>
+    </button>
+    <button class="btn btn-header" onclick="goProfile()">👤 Profile</button>
+    <button class="btn btn-header" onclick="logout()">🚪 Logout</button>
+  </div>
+</header>
+
+<div class="doc-hero">
+  <div class="dh-top fl-console">
+    <div class="dh-inner">
+      <div class="dh-profile">
+        <div class="dh-av">👨‍⚕️</div>
+        <div class="dh-info">
+          <h2>Dr. <span id="drName">—</span></h2>
+          <p>Physiotherapist portal — manage patients, assessments &amp; resources</p>
+          <div class="dh-badge">✦ Doctor account</div>
+        </div>
+      </div>
+      <div class="dh-stats">
+        <div class="dhs"><span class="dhs-n mono" id="wsSessions">—</span><span class="dhs-l">Sessions</span></div>
+        <div class="dhs"><span class="dhs-n mono" id="wsPlans">—</span><span class="dhs-l">Plans</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="qs-strip">
+    <div class="qs-inner">
+      <div class="qsc" style="--qc:var(--sage);">
+        <span class="qsc-n mono" id="qsRom">0</span>
+        <span class="qsc-l">ROM Sessions</span>
+      </div>
+      <div class="qsc" style="--qc:var(--gold);">
+        <span class="qsc-n mono" id="qsEx">0</span>
+        <span class="qsc-l">Exercise Plans</span>
+      </div>
+      <div class="qsc" style="--qc:#3D8B5B;">
+        <span class="qsc-n mono" id="qsNutr">0</span>
+        <span class="qsc-l">Nutrition Plans</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main class="doc-main">
+  <div class="sec-lbl">Clinical Modules</div>
+
+  <div class="modules-grid">
+
+    <div class="module-card" style="--mc:#5A7A62" onclick="window.location.href='patient-files.html'">
+      <span class="tile-code">D01</span>
+      <div class="mc-icon">🗂️</div>
+      <div class="mc-title">Patient Files</div>
+      <div class="mc-desc">Organized records — history, notes &amp; linked plans</div>
+      <div class="mc-arr">→</div>
+    </div>
+
+    <div class="module-card" style="--mc:var(--sage)" onclick="window.location.href='plans.html'">
+      <span class="tile-code">D02</span>
+      <div class="mc-icon">📁</div>
+      <div class="mc-title">Plans</div>
+      <div class="mc-desc">ROM data, exercise plans, progress &amp; nutrition</div>
+      <div class="mc-arr">→</div>
+    </div>
+
+    <div class="module-card" style="--mc:#2980B9" onclick="window.location.href='assessments.html'">
+      <span class="tile-code">D03</span>
+      <div class="mc-icon">🔬</div>
+      <div class="mc-title">Assessments</div>
+      <div class="mc-desc">ROM analysis &amp; manual muscle testing</div>
+      <div class="mc-arr">→</div>
+    </div>
+
+    <div class="module-card" style="--mc:var(--gold)" onclick="window.location.href='therapeutic-exercises.html'">
+      <span class="tile-code">D04</span>
+      <div class="mc-icon">🏋️</div>
+      <div class="mc-title">Exercises</div>
+      <div class="mc-desc">Browse &amp; assign therapeutic exercise plans</div>
+      <div class="mc-arr">→</div>
+    </div>
+
+    <div class="module-card" style="--mc:#3D8B5B" onclick="window.location.href='lifestyle.html'">
+      <span class="tile-code">D05</span>
+      <div class="mc-icon">🥗</div>
+      <div class="mc-title">Lifestyle</div>
+      <div class="mc-desc">Create personalised nutrition &amp; calorie plans</div>
+      <div class="mc-arr">→</div>
+    </div>
+
+    <div class="module-card" style="--mc:#9B59B6" onclick="window.location.href='guidelines.html'">
+      <span class="tile-code">D06</span>
+      <div class="mc-icon">📚</div>
+      <div class="mc-title">Guidelines</div>
+      <div class="mc-desc">AI clinical guidelines &amp; medical library</div>
+      <div class="mc-arr">→</div>
+    </div>
+
+    <div class="module-card" style="--mc:#1a6b8a" onclick="window.location.href='patient-helper.html'">
+      <span class="tile-code">D07</span>
+      <div class="mc-icon">🩹</div>
+      <div class="mc-title">Patient Helper</div>
+      <div class="mc-desc">Review patient pain reports &amp; reply with guidance</div>
+      <div class="mc-arr">→</div>
+    </div>
+
+    <div class="module-card" style="--mc:#C84A4A" onclick="window.location.href='doctor-schedule.html'">
+      <span class="tile-code">D08</span>
+      <div class="mc-icon">📅</div>
+      <div class="mc-title">Schedule</div>
+      <div class="mc-desc">Manage appointments &amp; patient calendar</div>
+      <div class="mc-arr">→</div>
+    </div>
+
+  </div>
+
+  <div class="sec-lbl">Today's Appointments</div>
+  <div class="schedule-card">
+    <div class="sch-head">
+      <div class="sch-title">Upcoming Sessions</div>
+      <button class="btn btn-outline" style="font-size:12px;padding:7px 16px;" onclick="window.location.href='doctor-schedule.html'">
+        View All →
+      </button>
+    </div>
+    <div id="scheduleList">
+      <div class="sch-empty">
+        <div class="sch-empty-ico">📅</div>
+        <div>No appointments scheduled for today.</div>
+        <div class="sch-empty-sub">Open your schedule to add or manage slots.</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script>
+try {
+  if (!firebase.apps.length) firebase.initializeApp({
+    apiKey:"AIzaSyCzK4OGhLBgmIKktawOm44zd9KyhHlaITE",
+    authDomain:"physiowork-8976f.firebaseapp.com",
+    projectId:"physiowork-8976f",
+    storageBucket:"physiowork-8976f.firebasestorage.app",
+    messagingSenderId:"789519816056",
+    appId:"1:789519816056:web:c2c8d82c83f8149fd1a48d"
+  });
+  window._fbDb = firebase.firestore();
+  window._fbStorage = firebase.storage();
+  window.FIREBASE_ENABLED = true;
+} catch(e) { window.FIREBASE_ENABLED = false; }
+</script>
+<script src="js/utils.js"></script>
+<script src="js/complaint-widget.js"></script>
+<script src="js/pwa.js"></script>
+<!-- ORIGINAL LOGIC — copied exactly from v9 -->
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = requireAuth('doctor');
+  if (!user) return;
+  document.getElementById('drName').textContent = user.name || user.email;
+
+  // ROM sessions from localStorage (same key analyz.html uses)
+  let romSessions = [];
+  try { romSessions = JSON.parse(localStorage.getItem('romDB_' + user.email) || '[]'); } catch {}
+
+  // Also try Firebase for fresh count
+  if (window.FIREBASE_ENABLED && window._fbDb) {
+    try {
+      const snap = await Promise.race([
+        window._fbDb.collection('romSessions').where('doctorEmail','==',user.email).get(),
+        new Promise((_,rej)=>setTimeout(()=>rej(),4000))
+      ]);
+      if (snap.docs.length > romSessions.length) romSessions = snap.docs.map(d=>d.data());
+    } catch {}
+  }
+
+  const plans = user.lifestylePlans || [];
+  const exPl  = user.sentExercises  || [];
+  const pts   = new Set([...romSessions.map(s=>s.patientEmail||''),...exPl.map(e=>e.patientEmail||'')].filter(Boolean));
+
+  document.getElementById('wsSessions').textContent = romSessions.length || '—';
+  document.getElementById('wsPlans').textContent    = (plans.length + exPl.length) || '—';
+  document.getElementById('qsRom').textContent   = romSessions.length;
+  document.getElementById('qsEx').textContent    = exPl.length;
+  document.getElementById('qsNutr').textContent  = plans.length;
+
+  // Load today's appointments preview
+  if (window.FIREBASE_ENABLED && window._fbDb) {
+    try {
+      const bookSnap = await window._fbDb.collection('bookings')
+        .where('doctorEmail','==',user.email).get();
+      const today = new Date().toDateString();
+      const todays = bookSnap.docs.map(d=>d.data()).filter(a => {
+        try {
+          const dt = new Date(a.date || (a.timestamp?.toDate ? a.timestamp.toDate() : a.timestamp));
+          return dt.toDateString() === today
+            && a.status !== 'dismissed'
+            && a.status !== 'cancelled'
+            && a.status !== 'rejected'
+            && a.status !== 'deleted';
+        } catch { return false; }
+      });
+      if (todays.length > 0) {
+        document.getElementById('scheduleList').innerHTML = todays.slice(0,5).map(a => `
+          <div class="sch-item">
+            <div class="sch-time">${a.time||'—'}</div>
+            <div class="sch-dot"></div>
+            <div>
+              <div class="sch-name">${a.patientName||a.patientEmail||'Patient'}</div>
+              <div class="sch-type">${a.type||'Session'}</div>
+            </div>
+          </div>`).join('');
+      }
+    } catch {}
+  }
+});
+function goProfile() { window.location.href = 'profile.html'; }
+async function logout() {
+  const ok = await customConfirm('Are you sure you want to log out?', {
+    title: 'Logout', icon: '🚪', confirmLabel: 'Logout', cancelLabel: 'Cancel', danger: true
+  });
+  if (!ok) return;
+  localStorage.removeItem('currentUser');
+  window.location.href = 'login.html';
+}
+</script>
+<script>
+if (window.Notification && Notification.permission === 'default') {
+  Notification.requestPermission();
+}
+</script>
+<script>
+(function() {
+  const user = getCurrentUser();
+  if (!user) return;
+  function updateBadge() {
+    const list = JSON.parse(localStorage.getItem('physio_notifs_' + user.email) || '[]');
+    const n = list.filter(x => !x.read).length;
+    const b = document.getElementById('chatBadge');
+    if (b) { if (n > 0) { b.textContent = n; b.style.display = 'block'; } else b.style.display = 'none'; }
+  }
+  updateBadge();
+  setInterval(updateBadge, 4000);
+})();
+</script>
+</body>
+</html>
